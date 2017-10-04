@@ -1,39 +1,47 @@
 class Rocket extends createjs.Sprite {
-    constructor(spriteSheet, animation) {
+    constructor(stage, spriteSheet, animation) {
         super(spriteSheet, animation);
         this.name = "rocket";
         this.currentSpeed = 5;
-
-        this.targetPos = {x: 50, y: 300};
+        this.active = false;
 
         this.regX = this.getBounds().width / 2;
         this.regY = this.getBounds().height / 2;
+
         this.scaleX = this.scaleY = 2;
+        this.rotation = 180;
+
+        this.x = stage.getBounds().width / 20;
+        this.y = stage.getBounds().height / 2;
+
+        stage.addChild(this);
 
         this.addEventListener('mousechange', this.mouseMove.bind(this));
     }
 
     handleMove() {
-        let targetPos = this.targetPos;
+        if(this.active) {
+            let targetPos = this.targetPos;
 
-        let direction = Math.atan2(targetPos.x - this.x, targetPos.y - this.y);
-        let direction_degrees = this.radians_to_degrees(direction);
-        
-        this.rotation = -direction_degrees;
-        
-        if(!this.intercepts(targetPos.x, targetPos.y)) {
-            if(this.currentAnimation != 'move') {
-                this.gotoAndPlay('move');
-            }
+            let direction = Math.atan2(targetPos.x - this.x, targetPos.y - this.y);
+            let direction_degrees = this.radians_to_degrees(direction);
+            
+            this.rotation = -direction_degrees;
+            
+            if(!this.intercepts(targetPos.x, targetPos.y)) {
+                if(this.currentAnimation != 'move') {
+                    this.gotoAndPlay('move');
+                }
 
-            let x = (this.currentSpeed / Math.sin(Math.PI / 2)) * Math.sin(direction);
-            let y = (this.currentSpeed / Math.sin(Math.PI / 2)) * Math.sin(Math.PI - (Math.PI / 2 + direction));
+                let x = (this.currentSpeed / Math.sin(Math.PI / 2)) * Math.sin(direction);
+                let y = (this.currentSpeed / Math.sin(Math.PI / 2)) * Math.sin(Math.PI - (Math.PI / 2 + direction));
 
-            this.x += x;
-            this.y += y;
-        } else {
-            if(this.currentAnimation != 'stop') {
-                this.gotoAndStop('stop');
+                this.x += x;
+                this.y += y;
+            } else {
+                if(this.currentAnimation != 'stop') {
+                    this.gotoAndStop('stop');
+                }
             }
         }
     }
@@ -42,7 +50,8 @@ class Rocket extends createjs.Sprite {
         let targetPos = {};
         targetPos.x = this.stage.mouseX;
         targetPos.y = this.stage.mouseY;
-        console.log(targetPos);
+        
+        this.active = true;
         this.targetPos = targetPos;
     }
 
