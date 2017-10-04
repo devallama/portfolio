@@ -65,9 +65,234 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\wamp64\\www\\new_portfolio\\js\\entry.js'\n    at Error (native)");
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classes_keyboard_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__classes_rocket_js__ = __webpack_require__(2);
+
+
+
+(function() {
+    let keyboard = new __WEBPACK_IMPORTED_MODULE_0__classes_keyboard_js__["a" /* default */]();
+
+    document.getElementById('canvas').width = document.getElementById('section_top').offsetWidth;
+    document.getElementById('canvas').height = document.getElementById('section_top').offsetHeight;
+
+    let stage;
+
+    var queue = new createjs.LoadQueue();
+    queue.on("complete", init, this);
+    queue.loadManifest([
+        {
+            id: "rocket", src: "./resources/imgs/rocket_sprites.png",
+        }
+    ]);
+
+    function init(event) {
+        let assets = event.currentTarget;
+        createStage();
+        createRocket(assets);
+        addListeners();
+    }
+
+    function createStage() {
+        stage = new createjs.Stage("canvas");
+        stage.lastMousePos = {x: 0, y: 0};
+
+        resizeCanvas();
+    }
+
+    function createRocket(assets) {
+        let rocket_spritesheet = new createjs.SpriteSheet(getRocketSpritesheet(assets));
+        
+        let rocket = new __WEBPACK_IMPORTED_MODULE_1__classes_rocket_js__["a" /* default */](stage, rocket_spritesheet, 'stop');
+    }
+
+    function getRocketSpritesheet(assets) {
+        return {
+            images: [assets.getResult('rocket')],
+            frames: {
+                width: 32,
+                height: 40
+            },
+            animations: {
+                stop: 0,
+                move: [1, 4, "move", 1],
+            }
+        }
+    }
+
+    function addListeners() {
+        window.addEventListener("resize", resizeCanvas);
+
+        createjs.Ticker.interval = 50;
+        createjs.Ticker.addEventListener("tick", handleTick);
+    }
+
+    function handleTick(event) {
+        let rocket = stage.getChildByName("rocket");
+        
+        if(stage.lastMousePos.x != stage.mouseX || stage.lastMousePos.y != stage.mouseY) {
+            stage.lastMousePos.x = stage.mouseX;
+            stage.lastMousePos.y = stage.mouseY;
+            rocket.dispatchEvent("mousechange");
+        }
+
+        rocket.handleMove();
+        
+        stage.update(event);
+    }
+
+    function resizeCanvas() {
+        console.log("called");
+        document.getElementById('canvas').width = document.getElementById('section_top').offsetWidth;
+        document.getElementById('canvas').height = document.getElementById('section_top').offsetHeight;
+
+        stage.setBounds(0, 0, document.getElementById('canvas').width, document.getElementById('canvas').height);
+    }
+})()
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class KeyboardInit {
+    constructor() {
+        this.keys_down = [];
+        document.addEventListener("keydown", this.keyDown.bind(this));
+        document.addEventListener("keyup", this.keyUp.bind(this));
+    }
+
+    keyDown(e) {
+        this.__addKey(e.key, this.keys_down);
+    }
+
+    keyUp(e) {
+        this.__removeKey(e.key, this.keys_down);
+    }
+
+    __addKey(key, array) {
+        if(array.indexOf(key) < 0) {
+            array.push(key);
+        }
+    }
+
+    __removeKey(key, array) {
+        if(array.indexOf(key) >= 0) {
+            array.splice(array.indexOf(key), 1);
+        }
+    }
+
+    isKeyDown(key) {
+        if(this.keys_down.indexOf(key) >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (KeyboardInit);
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Rocket extends createjs.Sprite {
+    constructor(stage, spriteSheet, animation) {
+        super(spriteSheet, animation);
+        this.name = "rocket";
+        this.currentSpeed = 5;
+        this.active = false;
+
+        this.regX = this.getBounds().width / 2;
+        this.regY = this.getBounds().height / 2;
+
+        this.scaleX = this.scaleY = 2;
+        this.rotation = 180;
+
+        this.x = stage.getBounds().width / 20;
+        this.y = stage.getBounds().height / 2;
+
+        stage.addChild(this);
+
+        this.addEventListener('mousechange', this.mouseMove.bind(this));
+    }
+
+    handleMove() {
+        if(this.active) {
+            let targetPos = this.targetPos;
+
+            let direction = Math.atan2(targetPos.x - this.x, targetPos.y - this.y);
+            let direction_degrees = this.radians_to_degrees(direction);
+            
+            this.rotation = -direction_degrees;
+            
+            if(!this.intercepts(targetPos.x, targetPos.y)) {
+                if(this.currentAnimation != 'move') {
+                    this.gotoAndPlay('move');
+                }
+
+                let x = (this.currentSpeed / Math.sin(Math.PI / 2)) * Math.sin(direction);
+                let y = (this.currentSpeed / Math.sin(Math.PI / 2)) * Math.sin(Math.PI - (Math.PI / 2 + direction));
+
+                this.x += x;
+                this.y += y;
+            } else {
+                if(this.currentAnimation != 'stop') {
+                    this.gotoAndStop('stop');
+                }
+            }
+        }
+    }
+
+    mouseMove(event) {
+        let targetPos = {};
+        targetPos.x = this.stage.mouseX;
+        targetPos.y = this.stage.mouseY;
+        
+        this.active = true;
+        this.targetPos = targetPos;
+    }
+
+    intercepts(x, y) {
+        let half_width = this.getActualBounds().half_width;
+        let half_height = this.getActualBounds().half_height;
+        if(x < this.x + half_width && x > this.x - half_width && y < this.y + half_height && y > this.y - half_height) {
+            return true;
+        }
+        return false;
+    }
+
+    degrees_to_radians(degrees) {
+        let radians = degrees * (Math.PI / 180);
+        return radians;
+    }
+
+    radians_to_degrees(radians) {
+        let degrees = radians * (180 / Math.PI);
+        return degrees;
+    }
+
+    getActualBounds() {
+        let width = this.getBounds().width * this.scaleX;
+        let height = this.getBounds().height * this.scaleY;
+        let half_width = width / 2;
+        let half_height = height / 2;
+        return {
+            width: width,
+            height: height,
+            half_width: half_width,
+            half_height: half_height
+        };
+    }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Rocket);
 
 /***/ })
 /******/ ]);
