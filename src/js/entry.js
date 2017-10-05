@@ -1,75 +1,110 @@
 import KeyboardInit from './classes/keyboard.js';
 import Rocket from './classes/rocket.js';
+import Star from './classes/star.js';
 
-let keyboard = new KeyboardInit();
+(function() {
+    let keyboard = new KeyboardInit();
+    let stage;
+    let starsContainer;
 
-document.getElementById('canvas').width = document.getElementById('section_top').offsetWidth;
-document.getElementById('canvas').height = document.getElementById('section_top').offsetHeight;
+    var queue = new createjs.LoadQueue();
+    queue.on("complete", init, this);
+    queue.loadManifest([
+        {
+            id: "rocket", src: "./resources/imgs/rocket_sprites.png",
+        }
+    ]);
 
-let stage = new createjs.Stage("canvas");
-
-
-var queue = new createjs.LoadQueue();
-queue.on("complete", init, this);
-queue.loadManifest([
-    {
-        id: "rocket", src: "rocket_sprites.png",
+    function init(event) {
+        let assets = event.currentTarget;
+        createStage();
+        createRocket(assets);
+        createStars();
+        addListeners();
     }
-]);
 
-function init() {
-    stage.setBounds(0, 0, document.getElementById('canvas').width, document.getElementById('canvas').height);
-    stage.lastMousePos = {x: 0, y: 0};
+    function createStage() {
+        stage = new createjs.Stage("canvas");
+        starsContainer = new createjs.Container();
 
-    console.log("called");
-    let sprite_data = {
-        images: [queue.getResult('rocket')],
-        frames: {
-            width: 32,
-            height: 40
-        },
-        animations: {
-            stop: 0,
-            move: [1, 4, "move", 1],
+        stage.addChild(starsContainer);
+
+        stage.lastMousePos = {x: 0, y: 0};
+
+        resizeCanvas();
+    }
+
+    function createStars() {
+        let stars = [['#2f687f', '#af8e1c', '#c86868', '#5ac8f5', '#be3fc9', '#b94353'],['#2f687f', '#af8e1c', '#c86868', '#5ac8f5', '#be3fc9', '#b94353']];
+        for(let i = 0; i < stars.length; i++) {
+            stars[i] = shuffleArray(stars[i]);
+            for(let j = 0; j < stars[i].length; j++) {
+                new Star(stage, starsContainer, stars[i][j], stars[i].length); 
+            }
         }
     }
 
-    let rocket_spritesheet = new createjs.SpriteSheet(sprite_data);
-
-    let rocket = new Rocket(rocket_spritesheet, "move");
-
-    stage.addChild(rocket);
-
-    
-
-    stage.update();
-
-    createjs.Ticker.interval = 50;
-    createjs.Ticker.addEventListener("tick", handleTick);
-}
-
-function handleTick(event) {
-    let rocket = stage.getChildByName("rocket");
-    
-    if(stage.lastMousePos.x != stage.mouseX || stage.lastMousePos.y != stage.mouseY) {
-        // console.log('Last Mouse x = ' + stage.lastMousePos.x + '|| current mouseX = ' + stage.mouseX);
-        stage.lastMousePos.x = stage.mouseX;
-        // console.log('Last Mouse y = ' + stage.lastMousePos.y + '|| current mouseY = ' + stage.mouseY);
-        stage.lastMousePos.y = stage.mouseY;
-        // console.log(ship.stage.x + ' | ' + ship.stage.y);
-        rocket.dispatchEvent("mousechange");
+    function shuffleArray(array) {
+        for(let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; 
+        }
+        return array;
     }
 
-    // if(keyboard.isKeyDown("w") || keyboard.isKeyDown("s")) {
-    //     if(rocket.currentAnimation != 'move') {
-    //         console.log(rocket);
-    //         rocket.gotoAndPlay("move"); 
-    //     }
-    // } else {
-    //     rocket.gotoAndPlay("stop");
-    // }
+    function removeStars() {
+        starsContainer.removeAllChildren();
+    }
 
-    rocket.handleMove();
-    
-    stage.update(event);
-}
+    function createRocket(assets) {
+        let rocket_spritesheet = new createjs.SpriteSheet(getRocketSpritesheet(assets));
+        
+        let rocket = new Rocket(stage, rocket_spritesheet, 'stop');
+    }
+
+    function getRocketSpritesheet(assets) {
+        return {
+            images: [assets.getResult('rocket')],
+            frames: {
+                width: 32,
+                height: 40
+            },
+            animations: {
+                stop: 0,
+                move: [1, 4, "move", 1],
+            }
+        }
+    }
+
+    function addListeners() {
+        window.addEventListener("resize", resizeCanvas);
+
+        createjs.Ticker.interval = 50;
+        createjs.Ticker.addEventListener("tick", handleTick);
+    }
+
+    function handleTick(event) {
+        let rocket = stage.getChildByName("rocket");
+        
+        if(stage.lastMousePos.x != stage.mouseX || stage.lastMousePos.y != stage.mouseY) {
+            stage.lastMousePos.x = stage.mouseX;
+            stage.lastMousePos.y = stage.mouseY;
+            rocket.dispatchEvent("mousechange");
+        }
+
+        rocket.handleMove();
+        
+        stage.update(event);
+    }
+
+    function resizeCanvas() {
+        console.log("called");
+        document.getElementById('canvas').width = document.getElementById('section_top').offsetWidth;
+        document.getElementById('canvas').height = document.getElementById('section_top').offsetHeight;
+
+        stage.setBounds(0, 0, document.getElementById('canvas').width, document.getElementById('canvas').height);
+
+        removeStars();
+        createStars();
+    }
+})()
