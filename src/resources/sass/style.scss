@@ -8,12 +8,6 @@ body {
     font-family: 'Source Sans Pro', sans-serif;
 }
 
-section {
-    width: 100vw;
-    height: 90vh;
-    background-image: url(../imgs/bg.png);
-}
-
 h2 {
     font-size: 8vh;
     font-weight: 200;
@@ -29,6 +23,9 @@ h2 {
 
 #section_top {
     position: relative;
+    width: 100vw;
+    height: 90vh;
+    background-image: url(../imgs/bg.png);
 
     canvas{
         position: absolute;
@@ -45,5 +42,68 @@ h2 {
             color: $light_text_color;
             opacity: 0.8;
         }
+    }
+}
+
+#home_nav {
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100vw;
+        overflow: auto;
+    }
+
+    li {
+        display: inline-block;
+        width: 33.2%;
+
+        &:nth-child(1) .border {
+            left: 0;
+            border-left: 1px solid purple;
+            border-bottom: 1px solid purple;
+        }
+    
+        &:nth-child(2) .border {
+            width: 100%;
+            text-align: center;
+            bottom: 0;
+            border-bottom: 1px solid purple;
+        }
+
+        &:nth-child(3) .border {
+            right: 0;
+            border-right: 1px solid purple; 
+            border-bottom: 1px solid purple;
+        }
+    }
+
+    a {
+        display: block;
+        width: 60%;
+        margin: 0 auto;
+        position: relative;
+        text-decoration: none;
+        font-weight: 300;
+        font-size: 1.6em;
+        text-align: center;
+        height: 8vh;
+        line-height: 9vh;
+        color: #4a4a4a;
+    }
+
+    a:hover {
+        background-color: #f2f2f2;
+
+        .border {
+            border-width: 2px;
+        }
+    }
+
+    .border {
+        position: absolute;
+        width: 30%;
+        height: 70%;
+        bottom: 0;
     }
 }
