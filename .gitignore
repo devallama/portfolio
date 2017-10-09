@@ -1,3 +1,4 @@
 psd_designs/
 src/resources/css/
-src/resources/.sass-cache
+src/resources/.sass-cache/
+src/script.js
