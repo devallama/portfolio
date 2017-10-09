@@ -11,12 +11,31 @@
     </head>
     <body>
         <div id="wrap">
-            <header>
-                <nav>
-
-                </nav>
-            </header>
-            <main>
+            <main id="home">
+                <header class="flex_container">
+                    <div class="box"></div>
+                    <nav class="box">
+                        <ul>
+                            <li>
+                                <a href="#home" class="here">home</a>
+                            </li>
+                            <li>
+                                <a href="#aboutme">about me</a>
+                            </li>
+                            <li>
+                                <a href="./index.html">projects</a>
+                            </li>
+                            <li>
+                                <a href="./index.html">blog</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div id="social_nav" class="box">
+                        <a href="#"><img src="resources/imgs/github.png" alt="GitHub Logo"></a>
+                        <a href="#"><img src="resources/imgs/linkedin.png" alt="Linkedin Logo"></a>
+                        <a href="#"><img src="resources/imgs/twitter.png" alt="Twitter Logo"></a>
+                    </div>
+                </header>
                 <section id="section_top">
                     <canvas id="canvas"></canvas>
                     <div class="text_overlay">
@@ -27,7 +46,7 @@
                 <section id="home_nav">
                     <ul>
                         <li>
-                            <a href="aboutme.html">learn about me <div class="border"></div></a>
+                            <a href="#aboutme">learn about me <div class="border"></div></a>
                         </li>
                         <li>
                             <a href="blog.php">read my blog <div class="border"></div></a>
@@ -38,6 +57,30 @@
                     </ul>
                 </section>
             </main>
+            <main id="aboutme">
+                <section class="flex_container">
+                    <div id="me" class="box">
+                        
+                    </div>
+                    <div id="about" class="box">
+                        <h2>Hey there!</h2>
+                        <h3>I'm Nic, a Web Designer &#38; Developer</h3>
+                        <p>
+
+                        </p>
+                    </div>
+                </section>
+                <section>
+                    <h3>My Skills</h3>
+                    
+                </section>
+                <sections>
+                    <h3>Contact me</h3>
+                </sections>
+            </main>
+            <footer>
+                
+            </footer>
         </div>
         <script src="script.js"></script>
     </body>

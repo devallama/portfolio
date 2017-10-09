@@ -1,6 +1,8 @@
 $secondary_color: #ff17e1;
 $light_text_color: #e8e8e8;
 
+$text_default: #2d2d2d;
+
 body {
     padding: 0;
     margin: 0;
@@ -21,11 +23,74 @@ h2 {
     color: $secondary_color;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+header {
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 8vh;
+
+    .box {
+        margin: auto;
+        width: 50vw;
+    }
+
+    .box:first-child .box:last-child {
+        width: 25vw;
+        min-height: 10px;
+    }
+
+    nav {
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            
+            li {
+                display: inline-block;
+                padding: 0 20px;
+
+                a {
+                    color: $text_default;
+                }
+            }
+        }
+    }
+
+    #social_nav {
+        text-align: right;
+        padding: 10px 20px;
+
+        img {
+            height: 32px;
+            padding: 0 20px;
+        }
+    }
+}
+
+main {
+    min-height: 100vh;
+}
+
+main#home {
+    overflow-x: hidden;
+}
+
 #section_top {
     position: relative;
     width: 100vw;
-    height: 90vh;
+    height: 80vh;
     background-image: url(../imgs/bg.png);
+    background-size: cover;
 
     canvas{
         position: absolute;
@@ -60,21 +125,21 @@ h2 {
 
         &:nth-child(1) .border {
             left: 0;
-            border-left: 1px solid purple;
-            border-bottom: 1px solid purple;
+            border-left: 1px solid #d122b9;
+            border-bottom: 1px solid #d122b9;
         }
     
         &:nth-child(2) .border {
             width: 100%;
             text-align: center;
             bottom: 0;
-            border-bottom: 1px solid purple;
+            border-bottom: 1px solid #d122b9;
         }
 
         &:nth-child(3) .border {
             right: 0;
-            border-right: 1px solid purple; 
-            border-bottom: 1px solid purple;
+            border-right: 1px solid #d122b9; 
+            border-bottom: 1px solid #d122b9;
         }
     }
 
@@ -83,7 +148,6 @@ h2 {
         width: 60%;
         margin: 0 auto;
         position: relative;
-        text-decoration: none;
         font-weight: 300;
         font-size: 1.6em;
         text-align: center;
@@ -93,7 +157,6 @@ h2 {
     }
 
     a:hover {
-        background-color: #f2f2f2;
 
         .border {
             border-width: 2px;
@@ -106,4 +169,8 @@ h2 {
         height: 70%;
         bottom: 0;
     }
+}
+
+main#aboutme {
+    margin: 4vh 5vw;
 }
