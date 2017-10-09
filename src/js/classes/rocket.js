@@ -9,7 +9,7 @@ class Rocket extends createjs.Sprite {
         this.regX = this.getBounds().width / 2;
         this.regY = this.getBounds().height / 2;
 
-        this.scaleX = this.scaleY = 3;
+        this.scaleX = this.scaleY = 1;
         this.rotation = 180;
 
         this.x = stage.getBounds().width / 20;

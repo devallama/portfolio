@@ -71,8 +71,8 @@ import Star from './classes/star.js';
         return {
             images: [assets.getResult('rocket')],
             frames: {
-                width: 32,
-                height: 40
+                width: 100,
+                height: 180
             },
             animations: {
                 stop: 0,
