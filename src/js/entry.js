@@ -19,7 +19,6 @@ import Star from './classes/star.js';
         let assets = event.currentTarget;
         createStage();
         createRocket(assets);
-        createStars();
         addListeners();
     }
 
@@ -36,10 +35,16 @@ import Star from './classes/star.js';
 
     function createStars() {
         let stars = [['#2f687f', '#af8e1c', '#c86868', '#5ac8f5', '#be3fc9', '#b94353'],['#2f687f', '#af8e1c', '#c86868', '#5ac8f5', '#be3fc9', '#b94353']];
+        outer:
         for(let i = 0; i < stars.length; i++) {
             stars[i] = shuffleArray(stars[i]);
+            console.log(stars[i]);
             for(let j = 0; j < stars[i].length; j++) {
-                new Star(stage, starsContainer, stars[i][j], stars[i].length); 
+                let resp = new Star(stage, starsContainer, stars[i][j]);
+                if(!resp.success) {
+                    console.log("stopped making stars");
+                    break outer;
+                } 
             }
         }
     }

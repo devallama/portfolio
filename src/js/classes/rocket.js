@@ -1,6 +1,7 @@
 class Rocket extends createjs.Sprite {
     constructor(stage, spriteSheet, animation) {
         super(spriteSheet, animation);
+
         this.name = "rocket";
         this.currentSpeed = 5;
         this.active = false;
@@ -8,7 +9,7 @@ class Rocket extends createjs.Sprite {
         this.regX = this.getBounds().width / 2;
         this.regY = this.getBounds().height / 2;
 
-        this.scaleX = this.scaleY = 2;
+        this.scaleX = this.scaleY = 3;
         this.rotation = 180;
 
         this.x = stage.getBounds().width / 20;
@@ -16,6 +17,10 @@ class Rocket extends createjs.Sprite {
 
         stage.addChild(this);
 
+        this.addListeners();
+    }
+
+    addListeners() {
         this.addEventListener('mousechange', this.mouseMove.bind(this));
     }
 
@@ -77,8 +82,10 @@ class Rocket extends createjs.Sprite {
     getActualBounds() {
         let width = this.getBounds().width * this.scaleX;
         let height = this.getBounds().height * this.scaleY;
+
         let half_width = width / 2;
         let half_height = height / 2;
+
         return {
             width: width,
             height: height,
