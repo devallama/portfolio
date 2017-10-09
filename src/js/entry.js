@@ -104,7 +104,7 @@ import Star from './classes/star.js';
 
     function resizeCanvas() {
         console.log("called");
-        document.getElementById('canvas').width = document.getElementById('section_top').offsetWidth;
+        document.getElementById('canvas').width = window.innerWidth;
         document.getElementById('canvas').height = document.getElementById('section_top').offsetHeight;
 
         stage.setBounds(0, 0, document.getElementById('canvas').width, document.getElementById('canvas').height);
